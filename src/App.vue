@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import tickets from "./data/tickets";
 </script>
 
 <template>
@@ -11,7 +11,9 @@ import HelloWorld from './components/HelloWorld.vue'
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <div>
+    <li v-for="t in tickets" :key="t.id">{{ t }}</li>
+  </div>
 </template>
 
 <style scoped>
