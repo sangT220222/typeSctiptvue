@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import tickets from "./data/tickets";
+import TicketList from "./components/TicketList.vue";
 </script>
 
 <template>
@@ -12,7 +13,7 @@ import tickets from "./data/tickets";
     </a>
   </div>
   <div>
-    <li v-for="t in tickets" :key="t.id">{{ t }}</li>
+    <TicketList :tickets="tickets" />
   </div>
 </template>
 
