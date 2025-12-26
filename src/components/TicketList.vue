@@ -5,12 +5,16 @@ import type { Ticket } from "../types/ticket";
 const prop = defineProps<{
   tickets: Ticket[];
 }>();
+const emit = defineEmits<{
+  (e: "open-ticket", ticketID: string): void;
+}>();
 </script>
 
 <template>
-  <div>
+  <ul>
     <li v-for="ticket in prop.tickets" :key="ticket.id">
       {{ ticket.title }}
+      <button @click="emit('open-ticket', ticket.id)">See ticket</button>
     </li>
-  </div>
+  </ul>
 </template>

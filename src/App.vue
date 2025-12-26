@@ -1,19 +1,40 @@
 <script setup lang="ts">
 import tickets from "./data/tickets";
 import TicketList from "./components/TicketList.vue";
+import { ref, computed } from "vue";
+
+const selectedTicketId = ref<string | null>(null);
+
+const selectedTicket = computed(() => {
+  if (!selectedTicketId.value) {
+    return null;
+  }
+  return tickets.find((ticket) => ticket.id === selectedTicketId.value);
+});
+
+function handleOpenTicket(ticketId: string) {
+  selectedTicketId.value = ticketId;
+}
 </script>
 
 <template>
-  <div>
+  <h1>Ticketing system</h1>
+  <!-- <div>
     <a href="https://vite.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
-  </div>
+  </div> -->
   <div>
-    <TicketList :tickets="tickets" />
+    <TicketList :tickets="tickets" @open-ticket="handleOpenTicket" />
+  </div>
+  <div v-if="selectedTicketId">
+    <h3>Title: {{ selectedTicket?.title }}</h3>
+    <p>Status: {{ selectedTicket?.status }}</p>
+    <p>Priority: {{ selectedTicket?.priority }}</p>
+    <p>Description: {{ selectedTicket?.description }}</p>
   </div>
 </template>
 
