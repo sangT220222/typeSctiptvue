@@ -4,6 +4,7 @@ import TicketList from "./components/TicketList.vue";
 import { ref, computed } from "vue";
 
 const selectedTicketId = ref<string | null>(null);
+const selectedMoreOption = ref<boolean>(false);
 
 const selectedTicket = computed(() => {
   if (!selectedTicketId.value) {
@@ -14,6 +15,11 @@ const selectedTicket = computed(() => {
 
 function handleOpenTicket(ticketId: string) {
   selectedTicketId.value = ticketId;
+  selectedMoreOption.value = false;
+}
+
+function handleOpenMore() {
+  selectedMoreOption.value = true;
 }
 </script>
 
@@ -28,7 +34,12 @@ function handleOpenTicket(ticketId: string) {
     </a>
   </div> -->
   <div>
-    <TicketList :tickets="tickets" @open-ticket="handleOpenTicket" />
+    <TicketList
+      :tickets="tickets"
+      :selectedTicketId="selectedTicketId"
+      @open-ticket="handleOpenTicket"
+      @open-further="handleOpenMore"
+    />
   </div>
   <div v-if="selectedTicketId">
     <h3>Title: {{ selectedTicket?.title }}</h3>
@@ -36,9 +47,12 @@ function handleOpenTicket(ticketId: string) {
     <p>Priority: {{ selectedTicket?.priority }}</p>
     <p>Description: {{ selectedTicket?.description }}</p>
   </div>
+  <div v-if="selectedMoreOption">
+    <p>Created on the: {{ selectedTicket?.createdAt }}</p>
+  </div>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -51,4 +65,4 @@ function handleOpenTicket(ticketId: string) {
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
-</style>
+</style> -->
