@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import tickets from "./data/tickets";
 import TicketList from "./components/TicketList.vue";
+import TicketDetail from "./components/TicketDetail.vue";
 import { ref, computed } from "vue";
 
 const selectedTicketId = ref<string | null>(null);
@@ -19,7 +20,12 @@ function handleOpenTicket(ticketId: string) {
 }
 
 function handleOpenMore() {
-  selectedMoreOption.value = true;
+  selectedMoreOption.value = !selectedMoreOption.value;
+}
+
+function handleCloseTicket() {
+  selectedTicketId.value = null;
+  selectedMoreOption.value = false;
 }
 </script>
 
@@ -41,14 +47,13 @@ function handleOpenMore() {
       @open-further="handleOpenMore"
     />
   </div>
-  <div v-if="selectedTicketId">
-    <h3>Title: {{ selectedTicket?.title }}</h3>
-    <p>Status: {{ selectedTicket?.status }}</p>
-    <p>Priority: {{ selectedTicket?.priority }}</p>
-    <p>Description: {{ selectedTicket?.description }}</p>
-  </div>
-  <div v-if="selectedMoreOption">
-    <p>Created on the: {{ selectedTicket?.createdAt }}</p>
+  <div>
+    <TicketDetail
+      :ticket="selectedTicket"
+      :show-more="selectedMoreOption"
+      @toggle-more="handleOpenMore"
+      @close="handleCloseTicket"
+    />
   </div>
 </template>
 

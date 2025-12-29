@@ -2,7 +2,7 @@
 <!-- gets data via props -->
 <script setup lang="ts">
 import type { Ticket } from "../types/ticket";
-const prop = defineProps<{
+const props = defineProps<{
   tickets: Ticket[];
   selectedTicketId: string | null;
 }>();
@@ -14,15 +14,9 @@ const emit = defineEmits<{
 
 <template>
   <ul>
-    <li v-for="ticket in prop.tickets" :key="ticket.id">
+    <li v-for="ticket in props.tickets" :key="ticket.id">
       {{ ticket.title }}
       <button @click="emit('open-ticket', ticket.id)">See ticket</button>
-      <button
-        v-if="ticket.id === prop.selectedTicketId"
-        @click="emit('open-further', true)"
-      >
-        More
-      </button>
     </li>
   </ul>
 </template>
