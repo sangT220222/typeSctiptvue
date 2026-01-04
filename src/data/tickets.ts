@@ -4,23 +4,40 @@ const tickets: Ticket[] = [];
 const firstTicket: Ticket = {
   id: "t1",
   title: "First ticket",
-  status: "open",
-  priority: "low",
+  status: "Open",
+  priority: "Low",
   description: "first ticket - testing verified",
   createdAt: new Date().toString(),
 };
-tickets.push(firstTicket);
 
 const secondTicket: Ticket = {
   id: "t2",
   title: "Second ticket",
-  status: "open",
-  priority: "high",
+  status: "In Progress",
+  priority: "High",
   description: "second ticket - testing verified",
   createdAt: new Date().toString(),
 };
 
-tickets.push(secondTicket);
+const thirdTicket: Ticket = {
+  id: "t3",
+  title: "Third ticket",
+  status: "Done",
+  priority: "High",
+  description: "third ticket - testing verified",
+  createdAt: new Date().toString(),
+};
+
+const fourthTicket: Ticket = {
+  id: "t4",
+  title: "4th ticket",
+  status: "Done",
+  priority: "High",
+  description: "fourth ticket - testing verified",
+  createdAt: new Date().toString(),
+};
+
+tickets.push(firstTicket, secondTicket, thirdTicket, fourthTicket);
 
 export default tickets;
 

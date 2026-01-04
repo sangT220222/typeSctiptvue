@@ -2,16 +2,40 @@
 import tickets from "./data/tickets";
 import TicketList from "./components/TicketList.vue";
 import TicketDetail from "./components/TicketDetail.vue";
+import TicketFilter from "./components/TicketFilter.vue";
 import { ref, computed } from "vue";
+import { type Priority, type Status } from "./types/ticket";
 
 const selectedTicketId = ref<string | null>(null);
 const selectedMoreOption = ref<boolean>(false);
+
+//Filtering
+const statusFilter = ref<Status | "all">("all");
+const priorityFilter = ref<Priority | "all">("all");
 
 const selectedTicket = computed(() => {
   if (!selectedTicketId.value) {
     return null;
   }
   return tickets.find((ticket) => ticket.id === selectedTicketId.value);
+});
+
+const filteredTickets = computed(() => {
+  if (statusFilter.value !== "all" && priorityFilter.value !== "all") {
+    return tickets.filter(
+      (ticket) =>
+        ticket.status === statusFilter.value &&
+        ticket.priority === priorityFilter.value
+    );
+  } else if (statusFilter.value !== "all" || priorityFilter.value !== "all") {
+    return tickets.filter((ticket) =>
+      statusFilter.value === "all"
+        ? ticket.priority === priorityFilter.value
+        : ticket.status === statusFilter.value
+    );
+  } else {
+    return tickets;
+  }
 });
 
 function handleOpenTicket(ticketId: string) {
@@ -40,8 +64,14 @@ function handleCloseTicket() {
     </a>
   </div> -->
   <div>
+    <TicketFilter
+      :status-filter="statusFilter"
+      @update:status-filter="statusFilter = $event"
+    />
+  </div>
+  <div>
     <TicketList
-      :tickets="tickets"
+      :tickets="filteredTickets"
       :selectedTicketId="selectedTicketId"
       @open-ticket="handleOpenTicket"
       @open-further="handleOpenMore"
