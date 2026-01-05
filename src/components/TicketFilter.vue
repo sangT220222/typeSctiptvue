@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { STATUS_OPTIONS, type Status, type Priority } from "../types/ticket";
+import {
+  STATUS_OPTIONS,
+  type Status,
+  type Priority,
+  PRIORITY_OPTIONS,
+} from "../types/ticket";
 const props = defineProps<{
   statusFilter: Status | "all";
-  //   priorityFilter: Priority | "all";
+  priorityFilter: Priority | "all";
 }>();
 const emits = defineEmits<{
   (e: "update:statusFilter", value: Status | "all"): void;
-  //   (e2: "priority-filter", value: Priority | "all"): void;
+  (e2: "update:priorityFilter", value: Priority | "all"): void;
 }>();
 </script>
 
@@ -27,9 +32,24 @@ const emits = defineEmits<{
       {{ status }}
     </option>
   </select>
-  <!-- <label>Priority</label>
+  <label>Priority</label>
 
-  <select>
-    Priority
-  </select> -->
+  <select
+    :value="props.priorityFilter"
+    @change="
+      emits(
+        'update:priorityFilter',
+        ($event.target as HTMLSelectElement).value as Priority | 'all'
+      )
+    "
+  >
+    <option value="all">All</option>
+    <option
+      v-for="priority in PRIORITY_OPTIONS"
+      :key="priority"
+      :value="priority"
+    >
+      {{ priority }}
+    </option>
+  </select>
 </template>

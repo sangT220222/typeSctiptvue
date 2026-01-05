@@ -6,9 +6,8 @@ const props = defineProps<{
   tickets: Ticket[];
   selectedTicketId: string | null;
 }>();
-const emit = defineEmits<{
+const emits = defineEmits<{
   (e: "open-ticket", ticketID: string): void;
-  (e2: "open-further", selected: boolean): void;
 }>();
 </script>
 
@@ -16,7 +15,7 @@ const emit = defineEmits<{
   <ul>
     <li v-for="ticket in props.tickets" :key="ticket.id">
       {{ ticket.title }}
-      <button @click="emit('open-ticket', ticket.id)">See ticket</button>
+      <button @click="emits('open-ticket', ticket.id)">See ticket</button>
     </li>
   </ul>
 </template>

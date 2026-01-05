@@ -66,7 +66,9 @@ function handleCloseTicket() {
   <div>
     <TicketFilter
       :status-filter="statusFilter"
+      :priority-filter="priorityFilter"
       @update:status-filter="statusFilter = $event"
+      @update:priority-filter="priorityFilter = $event"
     />
   </div>
   <div>

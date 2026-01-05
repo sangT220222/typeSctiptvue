@@ -4,7 +4,7 @@ const props = defineProps<{
   ticket?: Ticket | null | undefined;
   showMore: boolean;
 }>();
-const emit = defineEmits<{
+const emits = defineEmits<{
   (e: "toggle-more"): void;
   (e2: "close"): void;
 }>();
@@ -17,11 +17,11 @@ const emit = defineEmits<{
     <p>Priority: {{ props.ticket.priority }}</p>
     <p>Description: {{ props.ticket.description }}</p>
 
-    <button @click="emit('toggle-more')">
+    <button @click="emits('toggle-more')">
       {{ props.showMore ? "Less" : "More" }}
     </button>
 
-    <button @click="emit('close')">Close</button>
+    <button @click="emits('close')">Close</button>
 
     <div v-if="props.showMore">
       <p>Created on the: {{ props.ticket.createdAt }}</p>
