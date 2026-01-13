@@ -2,12 +2,16 @@
 import TicketList from "./components/TicketList.vue";
 import TicketDetail from "./components/TicketDetail.vue";
 import TicketFilter from "./components/TicketFilter.vue";
+import TicketForm from "./components/TicketForm.vue";
 import { useTicketStore } from "./stores/tickets";
 const store = useTicketStore();
 </script>
 
 <template>
   <h1>Ticketing system</h1>
+  <div>
+    <TicketForm />
+  </div>
   <div>
     <TicketFilter
       :status-filter="store.statusFilter"
@@ -19,7 +23,6 @@ const store = useTicketStore();
   <div>
     <TicketList
       :tickets="store.filteredTickets"
-      :selectedTicketId="store.selectedTicketId"
       @open-ticket="store.handleOpenTicket"
       @open-further="store.handleOpenMore"
     />

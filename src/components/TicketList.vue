@@ -4,7 +4,6 @@
 import type { Ticket } from "../types/ticket";
 const props = defineProps<{
   tickets: Ticket[];
-  selectedTicketId: string | null;
 }>();
 const emits = defineEmits<{
   (e: "open-ticket", ticketID: string): void;
