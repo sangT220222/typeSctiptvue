@@ -1,8 +1,13 @@
-export const STATUS_OPTIONS = ["Blocked", "Done", "In Progress", "Open"];
+export const STATUS_OPTIONS = [
+  "Blocked",
+  "Done",
+  "In Progress",
+  "Open",
+] as const;
 
 export type Status = (typeof STATUS_OPTIONS)[number];
 
-export const PRIORITY_OPTIONS = ["Low", "Medium", "High"];
+export const PRIORITY_OPTIONS = ["Low", "Medium", "High"] as const;
 export type Priority = (typeof PRIORITY_OPTIONS)[number];
 
 export type Ticket = {

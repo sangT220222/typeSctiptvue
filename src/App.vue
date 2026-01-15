@@ -10,7 +10,7 @@ const store = useTicketStore();
 <template>
   <h1>Ticketing system</h1>
   <div>
-    <TicketForm />
+    <TicketForm @submit="store.addTickets" />
   </div>
   <div>
     <TicketFilter

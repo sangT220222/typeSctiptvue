@@ -1,10 +1,12 @@
 // Here we want state, getters and actions that will be used within components
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { type Priority, type Status } from "../types/ticket";
-import tickets from "../data/tickets";
+import type { Priority, Status, Ticket } from "../types/ticket";
+// import initialTickets from "../data/tickets";
 
 export const useTicketStore = defineStore("tickets", () => {
+  //tickets is STATE reactive
+  const tickets = ref<Ticket[]>([]);
   //state
   const selectedTicketId = ref<string | null>(null);
   const selectedMoreOption = ref<boolean>(false);
@@ -15,24 +17,27 @@ export const useTicketStore = defineStore("tickets", () => {
     if (!selectedTicketId.value) {
       return null;
     }
-    return tickets.find((ticket) => ticket.id === selectedTicketId.value);
+    return (
+      tickets.value.find((ticket) => ticket.id === selectedTicketId.value) ??
+      null
+    );
   });
 
   const filteredTickets = computed(() => {
     if (statusFilter.value !== "all" && priorityFilter.value !== "all") {
-      return tickets.filter(
+      return tickets.value.filter(
         (ticket) =>
           ticket.status === statusFilter.value &&
           ticket.priority === priorityFilter.value
       );
     } else if (statusFilter.value !== "all" || priorityFilter.value !== "all") {
-      return tickets.filter((ticket) =>
+      return tickets.value.filter((ticket) =>
         statusFilter.value === "all"
           ? ticket.priority === priorityFilter.value
           : ticket.status === statusFilter.value
       );
     } else {
-      return tickets;
+      return tickets.value;
     }
   });
   //actions
@@ -49,6 +54,14 @@ export const useTicketStore = defineStore("tickets", () => {
     selectedTicketId.value = null;
     selectedMoreOption.value = false;
   }
+  function addTickets(input: Omit<Ticket, "id" | "createdAt">) {
+    const newTickets: Ticket = {
+      ...input,
+      id: `t-${crypto.randomUUID()}`,
+      createdAt: new Date().toISOString(),
+    };
+    tickets.value.push(newTickets);
+  }
 
   return {
     //state
@@ -63,5 +76,6 @@ export const useTicketStore = defineStore("tickets", () => {
     handleOpenMore,
     handleOpenTicket,
     handleCloseTicket,
+    addTickets,
   };
 });
