@@ -25,6 +25,7 @@ const store = useTicketStore();
       :tickets="store.filteredTickets"
       @open-ticket="store.handleOpenTicket"
       @open-further="store.handleOpenMore"
+      @delete-ticket="store.deleteTicket"
     />
   </div>
   <div>

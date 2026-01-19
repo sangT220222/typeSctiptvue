@@ -62,6 +62,15 @@ export const useTicketStore = defineStore("tickets", () => {
     };
     tickets.value.push(newTickets);
   }
+  function deleteTicket(ticketId: string) {
+    //need to find index and remove from array
+    const indexToDelete = tickets.value.findIndex(
+      (ticket) => ticket.id === ticketId
+    );
+    if (indexToDelete !== -1 || indexToDelete !== undefined) {
+      tickets.value.splice(indexToDelete, 1);
+    }
+  }
 
   return {
     //state
@@ -77,5 +86,6 @@ export const useTicketStore = defineStore("tickets", () => {
     handleOpenTicket,
     handleCloseTicket,
     addTickets,
+    deleteTicket,
   };
 });
