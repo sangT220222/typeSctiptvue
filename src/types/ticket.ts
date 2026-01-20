@@ -3,6 +3,7 @@ export const STATUS_OPTIONS = [
   "Done",
   "In Progress",
   "Open",
+  "To do",
 ] as const;
 
 export type Status = (typeof STATUS_OPTIONS)[number];

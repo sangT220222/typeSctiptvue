@@ -77,7 +77,14 @@ export const useTicketStore = defineStore("tickets", () => {
   function handleEditStatus() {
     editStatus.value = !editStatus.value;
   }
-
+  function updateTicketStatus(ticketId: string, newStatus: Status) {
+    const ticketToUpdate = tickets.value.find(
+      (ticket) => ticket.id === ticketId
+    );
+    if (ticketToUpdate) {
+      ticketToUpdate.status = newStatus;
+    }
+  }
   return {
     //state
     selectedTicketId,
@@ -95,5 +102,6 @@ export const useTicketStore = defineStore("tickets", () => {
     addTicket,
     deleteTicket,
     handleEditStatus,
+    updateTicketStatus,
   };
 });
