@@ -10,7 +10,7 @@ const store = useTicketStore();
 <template>
   <h1>Ticketing system</h1>
   <div>
-    <TicketForm @submit="store.addTickets" />
+    <TicketForm @submit="store.addTicket" />
   </div>
   <div>
     <TicketFilter
@@ -31,7 +31,9 @@ const store = useTicketStore();
   <div>
     <TicketDetail
       :ticket="store.selectedTicket"
-      :show-more="store.selectedMoreOption"
+      :showMore="store.selectedMoreOption"
+      :editStatus="store.editStatus"
+      @edit-status="store.handleEditStatus"
       @toggle-more="store.handleOpenMore"
       @close="store.handleCloseTicket"
     />

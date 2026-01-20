@@ -12,6 +12,7 @@ export const useTicketStore = defineStore("tickets", () => {
   const selectedMoreOption = ref<boolean>(false);
   const statusFilter = ref<Status | "all">("all");
   const priorityFilter = ref<Priority | "all">("all");
+  const editStatus = ref<boolean>(false);
   //getters
   const selectedTicket = computed(() => {
     if (!selectedTicketId.value) {
@@ -44,6 +45,7 @@ export const useTicketStore = defineStore("tickets", () => {
   function handleOpenTicket(ticketId: string) {
     selectedTicketId.value = ticketId;
     selectedMoreOption.value = false;
+    editStatus.value = false;
   }
 
   function handleOpenMore() {
@@ -53,23 +55,27 @@ export const useTicketStore = defineStore("tickets", () => {
   function handleCloseTicket() {
     selectedTicketId.value = null;
     selectedMoreOption.value = false;
+    editStatus.value = false;
   }
-  function addTickets(input: Omit<Ticket, "id" | "createdAt">) {
-    const newTickets: Ticket = {
+  function addTicket(input: Omit<Ticket, "id" | "createdAt">) {
+    const newTicket: Ticket = {
       ...input,
       id: `t-${crypto.randomUUID()}`,
       createdAt: new Date().toISOString(),
     };
-    tickets.value.push(newTickets);
+    tickets.value.push(newTicket);
   }
   function deleteTicket(ticketId: string) {
     //need to find index and remove from array
     const indexToDelete = tickets.value.findIndex(
       (ticket) => ticket.id === ticketId
     );
-    if (indexToDelete !== -1 || indexToDelete !== undefined) {
+    if (indexToDelete !== -1) {
       tickets.value.splice(indexToDelete, 1);
     }
+  }
+  function handleEditStatus() {
+    editStatus.value = !editStatus.value;
   }
 
   return {
@@ -78,6 +84,7 @@ export const useTicketStore = defineStore("tickets", () => {
     selectedMoreOption,
     statusFilter,
     priorityFilter,
+    editStatus,
     //getters
     selectedTicket,
     filteredTickets,
@@ -85,7 +92,8 @@ export const useTicketStore = defineStore("tickets", () => {
     handleOpenMore,
     handleOpenTicket,
     handleCloseTicket,
-    addTickets,
+    addTicket,
     deleteTicket,
+    handleEditStatus,
   };
 });
