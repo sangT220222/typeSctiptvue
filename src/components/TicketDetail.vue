@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { STATUS_OPTIONS } from "../types/ticket";
-import type { Ticket, Status } from "../types/ticket";
-import { ref } from "vue";
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../types/ticket";
+import type { Ticket, Priority, Status } from "../types/ticket";
+import { ref, watch } from "vue";
 const selectedStatus = ref<Status | "">("");
+const selectedPriority = ref<Priority | "">("");
+const updatedDescription = ref<string>("");
+
 const props = defineProps<{
   ticket?: Ticket | null | undefined;
   showMore: boolean;
@@ -12,18 +15,36 @@ const emits = defineEmits<{
   (e: "toggle-more"): void;
   (e2: "close"): void;
   (e3: "edit-status", ticketId: string): void;
-  (e4: "update:selected-status", ticketId: string, status: Status): void;
+  (
+    e4: "update:ticket",
+    ticketId: string,
+    status: Status,
+    priority: Priority,
+    description: string
+  ): void;
 }>();
 function saveStatus() {
   if (!props.ticket) return;
   if (!selectedStatus.value) return;
   emits(
-    "update:selected-status",
+    "update:ticket",
     props.ticket.id,
-    selectedStatus.value as Status
+    selectedStatus.value as Status,
+    selectedPriority.value as Priority,
+    updatedDescription.value as string
   );
-  selectedStatus.value = "";
 }
+watch(
+  () => props.ticket,
+  (ticket) => {
+    if (ticket) {
+      selectedStatus.value = ticket.status;
+      selectedPriority.value = ticket.priority;
+      updatedDescription.value = ticket.description;
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -33,20 +54,39 @@ function saveStatus() {
     <label v-if="props.editStatus"
       >Status:
       <select v-model="selectedStatus">
-        <option>Please select...</option>
         <option v-for="status in STATUS_OPTIONS" :key="status" :value="status">
           {{ status }}
         </option>
       </select>
-      <button @click="saveStatus()">Save</button>
     </label>
-    <p>Priority: {{ props.ticket.priority }}</p>
-    <p>Description: {{ props.ticket.description }}</p>
+    <p v-if="!props.editStatus">Priority: {{ props.ticket.priority }}</p>
+    <label v-if="props.editStatus">
+      Priority:
+      <select v-model="selectedPriority">
+        <option
+          v-for="priority in PRIORITY_OPTIONS"
+          :key="priority"
+          :value="priority"
+        >
+          {{ priority }}
+        </option>
+      </select>
+    </label>
+    <p v-if="!props.editStatus">Description: {{ props.ticket.description }}</p>
+    <label v-if="props.editStatus">
+      Description:
+      <textarea v-model="updatedDescription"> </textarea>
+    </label>
+    <div>
+      <button v-if="props.editStatus" @click="saveStatus()">Save</button>
+    </div>
 
     <button @click="emits('toggle-more')">
       {{ props.showMore ? "Less" : "More" }}
     </button>
-    <button @click="emits('edit-status', props.ticket.id)">Edit</button>
+    <button @click="emits('edit-status', props.ticket.id)">
+      {{ props.editStatus ? "Back" : "Edit" }}
+    </button>
     <button @click="emits('close')">Close</button>
 
     <div v-if="props.showMore">

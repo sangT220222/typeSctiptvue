@@ -36,7 +36,7 @@ const store = useTicketStore();
       @edit-status="store.handleEditStatus"
       @toggle-more="store.handleOpenMore"
       @close="store.handleCloseTicket"
-      @update:selected-status="store.updateTicketStatus"
+      @update:ticket="store.updateTicket"
     />
   </div>
 </template>
