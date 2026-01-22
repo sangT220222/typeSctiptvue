@@ -1,12 +1,26 @@
 // Here we want state, getters and actions that will be used within components
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import type { Priority, Status, Ticket } from "../types/ticket";
 // import initialTickets from "../data/tickets";
 
+const storageKey = "ticket-app-tickets";
+function loadTicketsFromStorage(): Ticket[] {
+  const storedTickets = localStorage.getItem(storageKey);
+  if (!storedTickets) {
+    return [];
+  }
+  try {
+    const parsed = JSON.parse(storedTickets);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 export const useTicketStore = defineStore("tickets", () => {
   //tickets is STATE reactive
-  const tickets = ref<Ticket[]>([]);
+  const tickets = ref<Ticket[]>(loadTicketsFromStorage());
   //state
   const selectedTicketId = ref<string | null>(null);
   const selectedMoreOption = ref<boolean>(false);
@@ -92,6 +106,15 @@ export const useTicketStore = defineStore("tickets", () => {
       ticketToUpdate.description = newDescription;
     }
   }
+
+  watch(
+    tickets,
+    (newTickets) => {
+      localStorage.setItem(storageKey, JSON.stringify(newTickets));
+    },
+    { deep: true }
+  );
+
   return {
     //state
     selectedTicketId,
