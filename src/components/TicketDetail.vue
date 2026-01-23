@@ -23,7 +23,7 @@ const emits = defineEmits<{
     description: string
   ): void;
 }>();
-function saveStatus() {
+function saveTicketEdits() {
   if (!props.ticket) return;
   if (!selectedStatus.value) return;
   emits(
@@ -34,6 +34,21 @@ function saveStatus() {
     updatedDescription.value as string
   );
 }
+function handleEditToggle() {
+  if (props.editStatus) {
+    cancelEdits(); //reset local references
+  }
+  emits("edit-status", props.ticket!.id);
+}
+function cancelEdits() {
+  if (!props.editStatus) {
+    return;
+  }
+  selectedStatus.value = props.ticket?.status || "";
+  selectedPriority.value = props.ticket?.priority || "";
+  updatedDescription.value = props.ticket?.description || "";
+}
+
 watch(
   () => props.ticket,
   (ticket) => {
@@ -78,14 +93,14 @@ watch(
       <textarea v-model="updatedDescription"> </textarea>
     </label>
     <div>
-      <button v-if="props.editStatus" @click="saveStatus()">Save</button>
+      <button v-if="props.editStatus" @click="saveTicketEdits()">Save</button>
     </div>
 
     <button @click="emits('toggle-more')">
       {{ props.showMore ? "Less" : "More" }}
     </button>
-    <button @click="emits('edit-status', props.ticket.id)">
-      {{ props.editStatus ? "Back" : "Edit" }}
+    <button @click="handleEditToggle()">
+      {{ props.editStatus ? "Cancel" : "Edit" }}
     </button>
     <button @click="emits('close')">Close</button>
 
