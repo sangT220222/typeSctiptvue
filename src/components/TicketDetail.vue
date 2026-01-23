@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../types/ticket";
 import type { Ticket, Priority, Status } from "../types/ticket";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 const selectedStatus = ref<Status | "">("");
 const selectedPriority = ref<Priority | "">("");
 const updatedDescription = ref<string>("");
+const isDirty = computed(() => {
+  if (!props.ticket) return false;
+  return (
+    selectedStatus.value !== props.ticket.status ||
+    selectedPriority.value !== props.ticket.priority ||
+    updatedDescription.value !== props.ticket.description
+  );
+});
 
 const props = defineProps<{
   ticket?: Ticket | null | undefined;
@@ -93,7 +101,9 @@ watch(
       <textarea v-model="updatedDescription"> </textarea>
     </label>
     <div>
-      <button v-if="props.editStatus" @click="saveTicketEdits()">Save</button>
+      <button v-if="props.editStatus && isDirty" @click="saveTicketEdits()">
+        Save
+      </button>
     </div>
 
     <button @click="emits('toggle-more')">
