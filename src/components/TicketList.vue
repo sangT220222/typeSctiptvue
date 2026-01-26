@@ -9,6 +9,11 @@ const emits = defineEmits<{
   (e: "open-ticket", ticketID: string): void;
   (e2: "delete-ticket", ticketID: string): void;
 }>();
+function deleteTicket(ticketId: string) {
+  if (window.confirm("Are you sure you want to delete this ticket?")) {
+    emits("delete-ticket", ticketId);
+  }
+}
 </script>
 
 <template>
@@ -16,7 +21,8 @@ const emits = defineEmits<{
     <li v-for="ticket in props.tickets" :key="ticket.id">
       {{ ticket.title }}
       <button @click="emits('open-ticket', ticket.id)">See ticket</button>
-      <button @click="emits('delete-ticket', ticket.id)">Delete</button>
+      <!-- <button @click="emits('delete-ticket', ticket.id)">Delete</button> -->
+      <button @click="deleteTicket(ticket.id)">Delete</button>
     </li>
   </ul>
 </template>

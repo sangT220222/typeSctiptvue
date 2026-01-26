@@ -13,6 +13,7 @@ const emits = defineEmits<{
   (e: "update:statusFilter", value: Status | "all"): void;
   (e2: "update:priorityFilter", value: Priority | "all"): void;
 }>();
+function applyFilters() {}
 </script>
 
 <template>
