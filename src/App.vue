@@ -18,11 +18,12 @@ const store = useTicketStore();
       :priority-filter="store.priorityFilter"
       @update:status-filter="store.statusFilter = $event"
       @update:priority-filter="store.priorityFilter = $event"
+      @update:sortBy="store.sortBy = $event"
     />
   </div>
   <div>
     <TicketList
-      :tickets="store.filteredTickets"
+      :tickets="store.sortTickets"
       @open-ticket="store.handleOpenTicket"
       @open-further="store.handleOpenMore"
       @delete-ticket="store.deleteTicket"

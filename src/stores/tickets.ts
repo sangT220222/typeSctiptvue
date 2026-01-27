@@ -27,6 +27,7 @@ export const useTicketStore = defineStore("tickets", () => {
   const statusFilter = ref<Status | "all">("all");
   const priorityFilter = ref<Priority | "all">("all");
   const editStatus = ref<boolean>(false);
+  const sortBy = ref<string>("createdAt");
   //getters
   const selectedTicket = computed(() => {
     if (!selectedTicketId.value) {
@@ -54,6 +55,25 @@ export const useTicketStore = defineStore("tickets", () => {
     } else {
       return tickets.value;
     }
+  });
+
+  const sortTickets = computed(() => {
+    const ticketCopy = [...filteredTickets.value];
+    if (sortBy.value === "status") {
+      ticketCopy.sort((a, b) => a.status.localeCompare(b.status));
+    } else if (sortBy.value === "priority") {
+      const order = ["Low, Medium, High"];
+      ticketCopy.sort(
+        (a, b) => order.indexOf(a.priority) - order.indexOf(b.priority)
+      );
+    } else if (sortBy.value === "createdAt") {
+      ticketCopy.sort((a, b) => {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
+    }
+    return ticketCopy;
   });
   //actions
   function handleOpenTicket(ticketId: string) {
@@ -122,9 +142,11 @@ export const useTicketStore = defineStore("tickets", () => {
     statusFilter,
     priorityFilter,
     editStatus,
+    sortBy,
     //getters
     selectedTicket,
     filteredTickets,
+    sortTickets,
     //actions
     handleOpenMore,
     handleOpenTicket,

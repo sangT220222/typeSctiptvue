@@ -12,8 +12,8 @@ const props = defineProps<{
 const emits = defineEmits<{
   (e: "update:statusFilter", value: Status | "all"): void;
   (e2: "update:priorityFilter", value: Priority | "all"): void;
+  (e3: "update:sortBy", value: string): void;
 }>();
-function applyFilters() {}
 </script>
 
 <template>
@@ -53,4 +53,21 @@ function applyFilters() {}
       {{ priority }}
     </option>
   </select>
+  <div>
+    <label
+      >Sort by:
+      <select
+        @change="
+          emits(
+            'update:sortBy',
+            ($event.target as HTMLSelectElement).value as string
+          )
+        "
+      >
+        <option value="createdAt">Created at</option>
+        <option value="priority">Priority</option>
+        <option value="status">Status</option>
+      </select>
+    </label>
+  </div>
 </template>
