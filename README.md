@@ -1,26 +1,25 @@
-Techstack
-
-Frontend
+##Techstack
+###Frontend
 • Vue 3
 • TypeScript
 • Vite
 • Pinia
 
-Backend
+###Backend
 • Node.js (ESM)
 • TypeScript
 • Express
 • Prisma ORM
 
-Database
+###Database
 • PostegreSQL
 
-Tooling
+###Tooling
 • Docker
 • Prisma Migrate
 • tsx
 
-Architecture Overview
+##Architecture Overview
 
 Vue frontend (Vite)
 |
@@ -32,13 +31,13 @@ Node.js API (Express, Typescript)
 v
 PostgreSQl (Docker container)
 
-Local dev setup
+##Local dev setup
 
 Node.js v20
 Docker desktop
 np
 
-Backend setup
+##Backend setup
 
 cd backend
 docker compose -d
@@ -47,22 +46,22 @@ npx prisma generate
 npx prisma migrate dev
 npm run dev
 
-Frontend setup
+##Frontend setup
 
 cd frontend
 npm install
 npm run dev
 
-Database
+##Database
 Postgres runs in Docker
 Schema managed by Prisma
 Migrations tracked in prisma_migration
 
-Core models
+##Core models
 User
 Ticket
 
-Takeaways
+##Takeaways
 Backend and frontend seperation
 Database schema design with relation and enums
 Dockerised local infrastructure
