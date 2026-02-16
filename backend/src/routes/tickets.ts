@@ -30,22 +30,47 @@ ticketsRouter.post("/", async (req, res) => {
   }
 });
 
-ticketsRouter.patch("/:id", async (req, res) => {
-  try {
-    const sentID = req.params.id;
-    const sentBody = req.body;
-    const matchedTicker = await prisma.ticket.findUnique({
-      where: { id: sentID },
+ticketsRouter.patch("/:id/status", async (req, res) => {
+  //no id found, return 404
+  if (!req.params.id) {
+    return res.status(404).json({ error: "ID not found, please provide it" });
+  }
+  const sentID = req.params.id;
+  //if id not found in db, return 404
+  const matchedTicket = await prisma.ticket.findUnique({
+    where: { id: sentID },
+  });
+
+  const sentBody = req.body;
+  //if status not provided in body
+  if (!sentBody.status) {
+    return res.status(400).json({ error: "Status needs to be in body!" });
+  }
+  //if status is not valid
+  if (!TicketStatus.safeParse(sentBody.status).success) {
+    return res.status(400).json({ error: "Invalid status value" });
+  }
+  if (!matchedTicket) {
+    return res
+      .status(404)
+      .json({ error: "Ticket with this ID is not found in database" });
+  }
+
+  //if status is the same as db, return 200;
+  if (matchedTicket.status === sentBody.status) {
+    return res.status(200).json({
+      message: "Status is the same as current status, no update needed!",
     });
-    if (matchedTicker && sentBody.status !== matchedTicker.status) {
-      //update status in the db
-      await prisma.ticket.update({
-        where: { id: sentID },
-        data: { status: sentBody.status },
-      });
-      return res.status(200).json({ message: "Status updated successfully" });
-    }
+  }
+
+  try {
+    //update status in the db
+    await prisma.ticket.update({
+      where: { id: sentID },
+      data: { status: sentBody.status },
+    });
+    return res.status(200).json({ message: "Status updated successfully" });
   } catch (error) {
-    return res.status(400).json({ error: "Request invalid" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
