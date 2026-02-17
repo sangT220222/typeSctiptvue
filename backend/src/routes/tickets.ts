@@ -21,6 +21,13 @@ const ticketSchema = z.object({
   priority: TicketPriority.optional(),
 });
 
+//status transition map for status updates validation
+const statusTransitionMaps = new Map([
+  ["todo", ["in_progress"]],
+  ["in_progress", ["todo", "done"]],
+  ["done", ["in_progress"]],
+]);
+
 ticketsRouter.post("/", async (req, res) => {
   try {
     const ticketData = await ticketSchema.parseAsync(req.body);
@@ -60,6 +67,15 @@ ticketsRouter.patch("/:id/status", async (req, res) => {
   if (matchedTicket.status === sentBody.status) {
     return res.status(200).json({
       message: "Status is the same as current status, no update needed!",
+    });
+  }
+
+  //validate status transition
+  const allowedTransition = statusTransitionMaps.get(matchedTicket.status); //array of allowed transitions
+  //check body's status in allowedTransition
+  if (!allowedTransition || !allowedTransition.includes(sentBody.status)) {
+    return res.status(400).json({
+      error: `Invalid status transition from ${matchedTicket.status} to ${sentBody.status}`,
     });
   }
 
