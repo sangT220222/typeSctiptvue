@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 // import dotenv from "dotenv";
 import cors from "cors";
-import { ticketsRouter } from "./routes/tickets.js";
+import { ticketsRouter } from "./routes/tickets.routes.js";
 
 const app = express();
 
