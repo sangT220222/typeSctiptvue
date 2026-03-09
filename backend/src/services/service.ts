@@ -1,17 +1,40 @@
 import { Prisma } from "../../prisma/generated/prisma/index.js";
 import { prisma } from "../db.js";
 import { ticketSchema } from "../schema/tickets.schema.js";
-import { TicketStatus, TicketPriority } from "../schema/tickets.schema.js";
+import {
+  TicketStatus,
+  TicketPriority,
+  TicketPriorityType,
+  TicketStatusType,
+} from "../schema/tickets.schema.js";
 export async function getAllTickets() {
   const tickets = await prisma.ticket.findMany();
   tickets.sort((a, b) => a.priority.localeCompare(b.priority));
   return tickets;
 }
 
+export async function getTickets(query: {
+  status?: TicketStatusType;
+  priority?: TicketPriorityType;
+}) {
+  //filter the list of tickets down
+  console.log(query.priority);
+  const tickets = await prisma.ticket.findMany({
+    where: {
+      AND: [
+        { status: { equals: query.status } },
+        { priority: { equals: query.priority } },
+      ],
+    },
+  });
+  return tickets;
+}
+
 export async function createNewTicket(body: unknown) {
   const ticketData = await ticketSchema.parseAsync(body);
-  //have error message to let user know specifically what correction is needed
-  return ticketData;
+  return prisma.ticket.create({
+    data: ticketData,
+  });
 }
 
 const statusTransitionMaps = new Map([

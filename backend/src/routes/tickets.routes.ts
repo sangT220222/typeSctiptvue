@@ -1,37 +1,43 @@
 //focused - tickets endpoints
 import { Router } from "express";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { prisma } from "../db.js";
 import { de } from "zod/locales";
 import { match } from "node:assert";
 import { Prisma } from "../../prisma/generated/prisma/index.js";
 export const ticketsRouter = Router();
+import { ticketQuerySchema } from "../schema/tickets.schema.js";
 import {
   getAllTickets,
   createNewTicket,
   updateTicket,
+  getTickets,
 } from "../services/service.js";
 
+// GET
 ticketsRouter.get("/", async (req, res) => {
-  const tickets = await getAllTickets();
-  res.json(tickets);
+  try {
+    //convert status & priority from string to enum
+    const query = await ticketQuerySchema.parseAsync(req.query);
+    console.log(query);
+    const filteredTickets = await getTickets(query);
+    res.json(filteredTickets);
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
 });
-
-// const TicketStatus = z.enum(["in_progress", "todo", "done"]);
-// const TicketPriority = z.enum(["low", "medium", "high", "urgent"]);
-// const ticketSchema = z.object({
-//   title: z.string().min(1).max(200),
-//   description: z.string().optional(),
-//   status: TicketStatus.optional(),
-//   priority: TicketPriority.optional(),
-// });
 
 ticketsRouter.post("/", async (req, res) => {
   try {
     const ticketData = await createNewTicket(req.body);
     return res.status(201).json(ticketData);
   } catch (error) {
-    return res.status(400).json({ error: "Invalid" });
+    if (error instanceof ZodError) {
+      return res.status(400).json({
+        errors: error.issues.map((i) => i.message),
+      });
+    }
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
